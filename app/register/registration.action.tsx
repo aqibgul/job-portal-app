@@ -1,26 +1,20 @@
 "use server";
+import { registerUserData } from "@/auth/auth.schema";
 import { db } from "@/config/db";
 import { users } from "@/drizzle/schema";
 import argon2 from "argon2";
 import { eq, or } from "drizzle-orm";
 import { toast } from "sonner";
 
-export const registrationAction = async (data: {
-  name: string;
-  userName: string;
-  Email: string;
-  userType: "applicant" | "employee";
-  password: string;
-  confirmPassword: string;
-}) => {
+export const registrationAction = async (data: registerUserData) => {
   try {
-    const { name, userName, Email, userType, password, confirmPassword } = data;
+    const { name, userName, email, userType, password, confirmPassword } = data;
     const [existingUser] = await db
       .select()
       .from(users)
-      .where(or(eq(users.email, Email), eq(users.userName, userName)));
+      .where(or(eq(users.email, email), eq(users.userName, userName)));
     if (existingUser) {
-      if (existingUser.email === Email) {
+      if (existingUser.email === email) {
         return { status: "error", message: "Email already in use" };
       } else {
         return { status: "error", message: "Username already in use" };
@@ -33,7 +27,7 @@ export const registrationAction = async (data: {
     await db.insert(users).values({
       name: name,
       userName: userName,
-      email: Email,
+      email: email,
       userType: userType,
       password: hashedPassword,
       confirmPassword: hashedConfirmPassword,
