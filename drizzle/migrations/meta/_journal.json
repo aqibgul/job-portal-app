@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1759991346545,
+      "tag": "0000_gigantic_korath",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1760771129346,
+      "tag": "0001_uneven_boomer",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1760862281301,
+      "tag": "0002_nice_iron_patriot",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1760939241425,
+      "tag": "0003_loving_tempest",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1760942303992,
+      "tag": "0004_groovy_santa_claus",
+      "breakpoints": true
+    }
+  ]
+}
