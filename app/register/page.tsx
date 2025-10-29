@@ -27,46 +27,67 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import { toast } from "sonner";
-interface RegistrationFormData {
-  name: string;
-  userName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  userType: "employee" | "applicant";
-}
+import { useForm, SubmitHandler } from "react-hook-form";
+import { registerWithConfirmPasswordData } from "@/auth/auth.schema";
+import registerWithConfirmPasswordSchema from "@/auth/auth.schema";
+import { ZodObject, ZodString, ZodDefault, ZodEnum } from "zod/v4";
+import { $strip } from "zod/v4/core";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+// interface RegistrationFormData {
+//   name: string;
+//   userName: string;
+//   email: string;
+//   password: string;
+//   confirmPassword: string;
+//   userType: "employee" | "applicant";
+// }
 
 const Registration: React.FC = () => {
-  const [formData, setFormData] = useState<RegistrationFormData>({
-    name: "",
-    userName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    userType: "applicant",
+  // const [formData, setFormData] = useState<RegistrationFormData>({
+  //   name: "",
+  //   userName: "",
+  //   email: "",
+  //   password: "",
+  //   confirmPassword: "",
+  //   userType: "applicant",
+  // });
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(registerWithConfirmPasswordSchema),
   });
 
-  const handleInputChange = (name: string, value: string) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-  const handleSubmitButton = async (e: FormEvent) => {
-    e.preventDefault();
+  // const handleInputChange = (name: string, value: string) => {
+  //   setFormData((prevData) => ({
+  //     ...prevData,
+  //     [name]: value,
+  //   }));
+  // };
+  const onSubmit = async (data: registerWithConfirmPasswordData) => {
+    // e.preventDefault();
 
-    const registrationData = {
-      name: formData.name.trim(),
-      userName: formData.userName.trim(),
-      Email: formData.email.toLowerCase().trim(),
-      userType: formData.userType,
-      password: formData.password,
-      confirmPassword: formData.confirmPassword,
-    };
-    if (formData.password !== formData.confirmPassword)
-      return toast.error("Passwords do not match");
+    // const registrationData = {
+    //   name: formData.name.trim(),
+    //   userName: formData.userName.trim(),
+    //   Email: formData.email.toLowerCase().trim(),
+    //   userType: formData.userType,
+    //   password: formData.password,
+    //   confirmPassword: formData.confirmPassword,
+    // };
+    // if (formData.password !== formData.confirmPassword)
+    //   return toast.error("Passwords do not match");
 
-    const result = await registrationAction(registrationData);
+    const result = await registrationAction(
+      data
+
+      // registrationData
+    );
     if (result.status === "success") {
       toast.success(result.message);
     } else {
@@ -89,21 +110,29 @@ const Registration: React.FC = () => {
           </CardHeader>
 
           <CardContent>
-            <form onSubmit={handleSubmitButton} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               {/* Name */}
               <div className="space-y-2">
                 <Label htmlFor="name">Name</Label>
                 <Input
                   id="name"
-                  name="name"
+                  // name="name"
                   placeholder="Enter your full name"
-                  value={formData.name}
-                  onChange={
-                    (e: ChangeEvent<HTMLInputElement>) =>
-                      handleInputChange("name", e.target.value) // Update state
-                  }
+                  {...register("name")}
+                  // value={formData.name}
+                  // onChange={
+                  //   (e: ChangeEvent<HTMLInputElement>) =>
+                  //     handleInputChange("name", e.target.value) // Update state
+                  // }
                   required
                 />
+                <div>
+                  {errors.name && (
+                    <p className="text-sm text-red-600">
+                      {errors.name.message}
+                    </p>
+                  )}
+                </div>
               </div>
 
               {/* Username */}
@@ -111,39 +140,58 @@ const Registration: React.FC = () => {
                 <Label htmlFor="username">Username</Label>
                 <Input
                   id="username"
-                  name="userName"
+                  // name="userName"
                   placeholder="Enter a username"
-                  value={formData.userName}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    handleInputChange("userName", e.target.value)
-                  }
+                  {...register("userName")}
+                  // value={formData.userName}
+                  // onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  //   handleInputChange("userName", e.target.value)
+                  // }
                   required
+                  className={errors.userName ? "border-destructive" : ""}
                 />
+                <div className="flex ">
+                  {errors.userName && (
+                    <p className="text-sm text-red-600">
+                      {errors.userName.message}
+                    </p>
+                  )}
+                </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
-                  name="email"
+                  // name="email"
                   type="email"
                   placeholder="Enter your email"
-                  value={formData.email}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    handleInputChange("email", e.target.value)
-                  }
+                  {...register("email")}
+                  // value={formData.email}
+                  // onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  //   handleInputChange("email", e.target.value)
+                  // }
                   required
                 />
+                <div>
+                  {errors.email && (
+                    <p className="text-sm text-red-600">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
               </div>
 
               {/* User Type */}
               <div className="space-y-2">
                 <Label>I am </Label>
                 <Select
-                  value={formData.userType}
-                  name="userType"
-                  onValueChange={(value: "employee" | "applicant") =>
-                    handleInputChange("userType", value)
-                  }
+                  {...register("userType")}
+                  // name="userType"
+                  // value={formData.userType}
+
+                  // onValueChange={(value: "employee" | "applicant") =>
+                  //   handleInputChange("userType", value)
+                  // }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select your role" />
@@ -162,14 +210,22 @@ const Registration: React.FC = () => {
                 <Input
                   id="password"
                   type="password"
-                  name="password"
+                  // name="password"
                   placeholder="Enter password"
-                  value={formData.password}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    handleInputChange("password", e.target.value)
-                  }
+                  {...register("password")}
+                  // value={formData.password}
+                  // onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  //   handleInputChange("password", e.target.value)
+                  // }
                   required
                 />
+                <div>
+                  {errors.password && (
+                    <p className="text-sm text-red-600">
+                      {errors.password.message}
+                    </p>
+                  )}
+                </div>
               </div>
 
               {/* Confirm Password */}
@@ -178,14 +234,22 @@ const Registration: React.FC = () => {
                 <Input
                   id="confirmPassword"
                   type="password"
-                  name="confirmPassword"
+                  // name="confirmPassword"
                   placeholder="Confirm your password"
-                  value={formData.confirmPassword}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    handleInputChange("confirmPassword", e.target.value)
-                  }
+                  {...register("confirmPassword")}
+                  // value={formData.confirmPassword}
+                  // onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  //   handleInputChange("confirmPassword", e.target.value)
+                  // }
                   required
                 />
+                <div>
+                  {errors.confirmPassword && (
+                    <p className="text-sm text-red-600">
+                      {errors.confirmPassword.message}
+                    </p>
+                  )}
+                </div>
               </div>
 
               <CardFooter className="flex justify-center pt-4">

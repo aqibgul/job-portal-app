@@ -18,41 +18,30 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import { toast } from "sonner";
-interface LoginFormData {
-  userName: string;
-
-  password: string;
-}
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema, loginUserData } from "@/auth/auth.schema";
 
 const Login: React.FC = () => {
-  const [formData, setFormData] = React.useState<LoginFormData>({
-    userName: "",
+  const {
+    register,
+    handleSubmit,
+    watch,
 
-    password: "",
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
   });
-  const handleInputChange = (name: string, value: string) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
 
-  const handleLoginButton = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const loginData = {
-      userName: formData.userName.trim(),
-
-      password: formData.password,
-    };
-    // Handle login logic here
-
-    const result = await loginAction(loginData);
+  const handleLoginButton = async (data: loginUserData) => {
+    const result = await loginAction(data);
     if (result.status === "success") {
       toast.success("Login successful!");
     } else {
       toast.error(result.message);
     }
   };
+  // Handle login logic here
 
   return (
     <>
@@ -67,20 +56,26 @@ const Login: React.FC = () => {
           </CardHeader>
 
           <CardContent>
-            <form onSubmit={handleLoginButton} className="space-y-4">
+            <form
+              onSubmit={handleSubmit(handleLoginButton)}
+              className="space-y-4"
+            >
               {/* Username */}
               <div className="space-y-2">
                 <Label htmlFor="username">Username</Label>
                 <Input
                   id="username"
-                  name="username"
                   placeholder="Enter a username"
-                  value={formData.userName}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    handleInputChange("userName", e.target.value)
-                  }
+                  {...register("userName")}
                   required
                 />
+                <div>
+                  {errors.userName && (
+                    <p className="text-sm text-red-600">
+                      {errors.userName.message}
+                    </p>
+                  )}
+                </div>
               </div>
 
               {/* Password */}
@@ -89,14 +84,17 @@ const Login: React.FC = () => {
                 <Input
                   id="password"
                   type="password"
-                  name="password"
                   placeholder="Enter password"
-                  value={formData.password}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    handleInputChange("password", e.target.value)
-                  }
+                  {...register("password")}
                   required
                 />
+                <div>
+                  {errors.password && (
+                    <p className="text-sm text-red-600">
+                      {errors.password.message}
+                    </p>
+                  )}
+                </div>
               </div>
 
               <CardFooter className="flex justify-center pt-4">

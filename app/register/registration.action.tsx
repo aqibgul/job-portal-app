@@ -1,14 +1,19 @@
 "use server";
-import { registerUserData } from "@/auth/auth.schema";
+import { registerUserData, registerUserSchema } from "@/auth/auth.schema";
 import { db } from "@/config/db";
 import { users } from "@/drizzle/schema";
 import argon2 from "argon2";
 import { eq, or } from "drizzle-orm";
-import { toast } from "sonner";
 
 export const registrationAction = async (data: registerUserData) => {
   try {
-    const { name, userName, email, userType, password, confirmPassword } = data;
+    const { data: validatedData, error } = registerUserSchema.safeParse(data);
+    if (error) {
+      return { status: "error", message: error.issues[0].message };
+    }
+
+    const { name, userName, email, userType, password, confirmPassword } =
+      validatedData;
     const [existingUser] = await db
       .select()
       .from(users)
