@@ -12,7 +12,7 @@ export const registrationAction = async (data: registerUserData) => {
       return { status: "error", message: error.issues[0].message };
     }
 
-    const { name, userName, email, userType, password, confirmPassword } =
+    const { f_name, userName, email, userType, password, confirmPassword } =
       validatedData;
     const [existingUser] = await db
       .select()
@@ -30,7 +30,7 @@ export const registrationAction = async (data: registerUserData) => {
     const hashedConfirmPassword = await argon2.hash(confirmPassword);
 
     await db.insert(users).values({
-      name: name,
+      f_name: f_name,
       userName: userName,
       email: email,
       userType: userType,
@@ -42,6 +42,7 @@ export const registrationAction = async (data: registerUserData) => {
 
     return { status: "success", message: "User registered successfully" };
   } catch (error) {
+    console.error("Registration error:", error);
     return { status: "error", message: "Registration fail" };
   }
 };

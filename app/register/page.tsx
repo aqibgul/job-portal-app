@@ -118,7 +118,7 @@ const Registration: React.FC = () => {
                   id="name"
                   // name="name"
                   placeholder="Enter your full name"
-                  {...register("name")}
+                  {...register("f_name")}
                   // value={formData.name}
                   // onChange={
                   //   (e: ChangeEvent<HTMLInputElement>) =>
@@ -127,9 +127,9 @@ const Registration: React.FC = () => {
                   required
                 />
                 <div>
-                  {errors.name && (
+                  {errors.f_name && (
                     <p className="text-sm text-red-600">
-                      {errors.name.message}
+                      {errors.f_name.message}
                     </p>
                   )}
                 </div>

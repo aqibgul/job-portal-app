@@ -13,7 +13,8 @@ export const loginSchema = z.object({
 export type loginUserData = z.infer<typeof loginSchema>;
 
 export const registerUserSchema = z.object({
-  name: z
+  id: z.string().optional(),
+  f_name: z
     .string()
     .min(2, { message: "Name must be at least 2 characters long" })
     .trim()
