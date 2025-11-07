@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "e1c76498-44aa-41ab-ab0b-08028a9e437d",
-  "prevId": "f0568f22-c9b7-4a20-849c-77d7b1ce1986",
+  "id": "45c97390-84aa-486a-8719-1d9f66dc3158",
+  "prevId": "ad21c442-2380-4909-9a62-1d51e2c44868",
   "tables": {
     "sessions": {
       "name": "sessions",
@@ -18,7 +18,7 @@
           "name": "user_id",
           "type": "int",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "user_agent": {
@@ -33,13 +33,6 @@
           "type": "varchar(45)",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
-        },
-        "token": {
-          "name": "token",
-          "type": "varchar(512)",
-          "primaryKey": false,
-          "notNull": false,
           "autoincrement": false
         },
         "created_at": {
@@ -80,7 +73,7 @@
             "id"
           ],
           "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -91,14 +84,7 @@
           ]
         }
       },
-      "uniqueConstraints": {
-        "sessions_token_unique": {
-          "name": "sessions_token_unique",
-          "columns": [
-            "token"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "checkConstraint": {}
     },
     "users": {

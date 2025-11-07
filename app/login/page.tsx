@@ -33,7 +33,7 @@ const Login: React.FC = () => {
     resolver: zodResolver(loginSchema),
   });
 
-  const handleLoginButton = async (data: loginUserData) => {
+  const onSubmit = async (data: loginUserData) => {
     const result = await loginAction(data);
     if (result.status === "success") {
       toast.success("Login successful!");
@@ -56,10 +56,7 @@ const Login: React.FC = () => {
           </CardHeader>
 
           <CardContent>
-            <form
-              onSubmit={handleSubmit(handleLoginButton)}
-              className="space-y-4"
-            >
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               {/* Username */}
               <div className="space-y-2">
                 <Label htmlFor="username">Username</Label>

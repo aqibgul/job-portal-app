@@ -5,6 +5,8 @@ import { users } from "@/drizzle/schema";
 import { eq, or } from "drizzle-orm";
 import argon2 from "argon2";
 import { loginSchema, loginUserData } from "@/auth/auth.schema";
+import { create } from "domain";
+import { createSessionSetCookies } from "@/auth/server/use-cases/sessions";
 
 export const loginAction = async (data: loginUserData) => {
   // Implement login logic here, e.g., verify user credentials against the database
@@ -23,11 +25,14 @@ export const loginAction = async (data: loginUserData) => {
       return { status: "error", message: "Invalid username or password" };
     }
     const isPasswordValid = await argon2.verify(user.password, password);
+    await createSessionSetCookies(user.id);
+
     if (!isPasswordValid) {
       return { status: "error", message: "Invalid username or password" };
     }
     return { status: "success", message: "Login successful" };
   } catch (error) {
+    console.error("Login error:", error);
     return { status: "error", message: "unknown error occurred" };
   }
 };

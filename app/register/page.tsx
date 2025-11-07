@@ -28,7 +28,10 @@ import {
 import Link from "next/link";
 import { toast } from "sonner";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { registerWithConfirmPasswordData } from "@/auth/auth.schema";
+import {
+  registerUserSchema,
+  registerWithConfirmPasswordData,
+} from "@/auth/auth.schema";
 import registerWithConfirmPasswordSchema from "@/auth/auth.schema";
 import { ZodObject, ZodString, ZodDefault, ZodEnum } from "zod/v4";
 import { $strip } from "zod/v4/core";
@@ -115,7 +118,7 @@ const Registration: React.FC = () => {
               <div className="space-y-2">
                 <Label htmlFor="name">Name</Label>
                 <Input
-                  id="name"
+                  id="f_name"
                   // name="name"
                   placeholder="Enter your full name"
                   {...register("f_name")}
@@ -139,7 +142,7 @@ const Registration: React.FC = () => {
               <div className="space-y-2">
                 <Label htmlFor="username">Username</Label>
                 <Input
-                  id="username"
+                  id="userName"
                   // name="userName"
                   placeholder="Enter a username"
                   {...register("userName")}

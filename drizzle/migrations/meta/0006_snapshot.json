@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "e1c76498-44aa-41ab-ab0b-08028a9e437d",
-  "prevId": "f0568f22-c9b7-4a20-849c-77d7b1ce1986",
+  "id": "cc082f10-3ed8-4d8c-8325-8a3d317108f3",
+  "prevId": "e1c76498-44aa-41ab-ab0b-08028a9e437d",
   "tables": {
     "sessions": {
       "name": "sessions",
@@ -14,8 +14,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "int",
           "primaryKey": false,
           "notNull": false,
@@ -69,12 +69,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "sessions_user_id_users_id_fk": {
-          "name": "sessions_user_id_users_id_fk",
+        "sessions_userId_users_id_fk": {
+          "name": "sessions_userId_users_id_fk",
           "tableFrom": "sessions",
           "tableTo": "users",
           "columnsFrom": [
-            "user_id"
+            "userId"
           ],
           "columnsTo": [
             "id"
@@ -218,7 +218,9 @@
   "_meta": {
     "schemas": {},
     "tables": {},
-    "columns": {}
+    "columns": {
+      "\"sessions\".\"user_id\"": "\"sessions\".\"userId\""
+    }
   },
   "internal": {
     "tables": {},

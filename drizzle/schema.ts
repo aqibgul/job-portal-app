@@ -5,17 +5,18 @@ import {
   varchar,
   timestamp,
   mysqlEnum,
+  serial,
 } from "drizzle-orm/mysql-core";
 
 export const users = mysqlTable("users", {
-  id: int("id").autoincrement().primaryKey(),
-  f_name: varchar("name", { length: 256 }).notNull(),
-  userName: varchar("username", { length: 256 }).notNull().unique(),
+  id: serial("id").primaryKey(),
+  f_name: varchar("name", { length: 255 }).notNull(),
+  userName: varchar("username", { length: 255 }).notNull().unique(),
   userType: mysqlEnum("role", ["Admin", "employee", "applicant"])
     .default("applicant")
     .notNull(),
 
-  email: varchar("email", { length: 256 }).notNull().unique(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
   password: text("password").notNull(),
   confirmPassword: text("confirmPassword").notNull(),
   phoneNumber: varchar("phone_number", { length: 255 }).notNull(),
@@ -25,11 +26,13 @@ export const users = mysqlTable("users", {
 });
 export const sessions = mysqlTable("sessions", {
   id: varchar("id", { length: 255 }).primaryKey(),
-  userId: int("user_id").references(() => users.id, { onDelete: "cascade" }),
+  userId: int("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade", onUpdate: "cascade" }),
 
   userAgent: text("user_agent").notNull(),
-  ip: varchar("ip_address", { length: 45 }).notNull(),
-  token: varchar("token", { length: 512 }).notNull().unique(),
+  ip: varchar("ip_address", { length: 255 }).notNull(),
+  token: varchar("token", { length: 512 }).unique().default("").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   expiresAt: timestamp("expires_at").notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),

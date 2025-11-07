@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "e1c76498-44aa-41ab-ab0b-08028a9e437d",
-  "prevId": "f0568f22-c9b7-4a20-849c-77d7b1ce1986",
+  "id": "8feb92d4-b4eb-43e0-9dee-38c3330cb1c1",
+  "prevId": "45c97390-84aa-486a-8719-1d9f66dc3158",
   "tables": {
     "sessions": {
       "name": "sessions",
@@ -18,7 +18,7 @@
           "name": "user_id",
           "type": "int",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "user_agent": {
@@ -30,7 +30,7 @@
         },
         "ip_address": {
           "name": "ip_address",
-          "type": "varchar(45)",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -39,8 +39,9 @@
           "name": "token",
           "type": "varchar(512)",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": true,
+          "autoincrement": false,
+          "default": "''"
         },
         "created_at": {
           "name": "created_at",
@@ -80,7 +81,7 @@
             "id"
           ],
           "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -106,21 +107,21 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "int",
+          "type": "serial",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": true
         },
         "name": {
           "name": "name",
-          "type": "varchar(256)",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "username": {
           "name": "username",
-          "type": "varchar(256)",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -135,7 +136,7 @@
         },
         "email": {
           "name": "email",
-          "type": "varchar(256)",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
