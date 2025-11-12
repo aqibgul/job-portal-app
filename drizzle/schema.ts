@@ -28,11 +28,11 @@ export const sessions = mysqlTable("sessions", {
   id: varchar("id", { length: 255 }).primaryKey(),
   userId: int("user_id")
     .notNull()
-    .references(() => users.id, { onDelete: "cascade", onUpdate: "cascade" }),
+    .references(() => users.id, { onDelete: "cascade" }),
 
   userAgent: text("user_agent").notNull(),
   ip: varchar("ip_address", { length: 255 }).notNull(),
-  token: varchar("token", { length: 512 }).unique().default("").notNull(),
+  // token: varchar("token", { length: 512 }).unique().default(""),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   expiresAt: timestamp("expires_at").notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),

@@ -1,5 +1,6 @@
 "use server";
 import { registerUserData, registerUserSchema } from "@/auth/auth.schema";
+import { createSessionSetCookies } from "@/auth/server/use-cases/sessions";
 import { db } from "@/config/db";
 import { users } from "@/drizzle/schema";
 import argon2 from "argon2";
@@ -29,7 +30,7 @@ export const registrationAction = async (data: registerUserData) => {
     const hashedPassword = await argon2.hash(password);
     const hashedConfirmPassword = await argon2.hash(confirmPassword);
 
-    await db.insert(users).values({
+    const [result] = await db.insert(users).values({
       f_name: f_name,
       userName: userName,
       email: email,
@@ -39,6 +40,7 @@ export const registrationAction = async (data: registerUserData) => {
 
       phoneNumber: "0000000000",
     });
+    await createSessionSetCookies(result.insertId);
 
     return { status: "success", message: "User registered successfully" };
   } catch (error) {

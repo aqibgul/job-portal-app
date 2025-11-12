@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import { toast } from "sonner";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import {
   registerUserSchema,
   registerWithConfirmPasswordData,
@@ -60,6 +60,7 @@ const Registration: React.FC = () => {
     register,
     handleSubmit,
     watch,
+    control,
 
     formState: { errors },
   } = useForm({
@@ -187,23 +188,31 @@ const Registration: React.FC = () => {
               {/* User Type */}
               <div className="space-y-2">
                 <Label>I am </Label>
-                <Select
-                  {...register("userType")}
-                  // name="userType"
-                  // value={formData.userType}
+                <Controller
+                  name="userType"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      // {...register("userType")}
+                      // name="userType"
+                      // value={formData.userType}
 
-                  // onValueChange={(value: "employee" | "applicant") =>
-                  //   handleInputChange("userType", value)
-                  // }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select your role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="employee">Employee</SelectItem>
-                    <SelectItem value="applicant">Applicant</SelectItem>
-                  </SelectContent>
-                </Select>
+                      // onValueChange={(value: "employee" | "applicant") =>
+                      //   handleInputChange("userType", value)
+                      // }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select your role" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="employee">Employee</SelectItem>
+                        <SelectItem value="applicant">Applicant</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                ></Controller>
               </div>
 
               {/* Password */}

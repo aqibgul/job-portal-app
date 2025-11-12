@@ -1,8 +1,12 @@
-"use client";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { getCurrentUser } from "@/auth/server/auth.queries";
+import { use, useEffect } from "react";
+import { users } from "@/drizzle/schema";
 
-export default function Home() {
+export default async function Home() {
+  const user = await getCurrentUser();
+  console.log("Current User ID:", user?.userType);
   return (
     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
@@ -41,7 +45,7 @@ export default function Home() {
               width={20}
               height={20}
             />
-            Deploy now
+            Deploy now {user?.email}
           </a>
           <a
             className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
@@ -51,16 +55,6 @@ export default function Home() {
           >
             Read our docs
           </a>
-          <Button
-            variant="outline"
-            size="lg"
-            onClick={() => {
-              alert("Hello, world!");
-            }}
-          >
-            {" "}
-            Click me
-          </Button>
         </div>
       </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
