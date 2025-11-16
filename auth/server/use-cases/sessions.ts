@@ -67,7 +67,7 @@ export const validateSessionAndGetUserId = async (token: string) => {
     .select({
       id: users.id,
       session: {
-        id: sessions.userId,
+        id: sessions.id,
         expiresAt: sessions.expiresAt,
         useragent: sessions.userAgent,
         ip: sessions.ip,
@@ -83,5 +83,20 @@ export const validateSessionAndGetUserId = async (token: string) => {
     .from(sessions)
     .innerJoin(users, eq(users.id, sessions.userId))
     .where(eq(sessions.id, hashedToken));
+  if (!user) {
+    return null;
+  }
+
+  if (Date.now() > user.session.expiresAt.getTime()) {
+    await invalidateSession(user.session.id);
+
+    // Session expired
+    return null;
+  }
+
   return user;
+};
+
+const invalidateSession = async (id: string) => {
+  await db.delete(sessions).where(eq(sessions.id, id));
 };

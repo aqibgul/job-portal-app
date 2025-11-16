@@ -36,6 +36,7 @@ import registerWithConfirmPasswordSchema from "@/auth/auth.schema";
 import { ZodObject, ZodString, ZodDefault, ZodEnum } from "zod/v4";
 import { $strip } from "zod/v4/core";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 
 // interface RegistrationFormData {
 //   name: string;
@@ -66,6 +67,7 @@ const Registration: React.FC = () => {
   } = useForm({
     resolver: zodResolver(registerWithConfirmPasswordSchema),
   });
+  const router = useRouter();
 
   // const handleInputChange = (name: string, value: string) => {
   //   setFormData((prevData) => ({
@@ -92,8 +94,14 @@ const Registration: React.FC = () => {
 
       // registrationData
     );
+
     if (result.status === "success") {
       toast.success(result.message);
+      if (result.status === "success") {
+        if (data.userType === "employee") {
+          router.push("/employee-dashboard");
+        }
+      }
     } else {
       toast.error(result.message);
     }

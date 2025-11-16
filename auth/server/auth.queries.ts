@@ -9,6 +9,6 @@ export const getCurrentUser = cache(async () => {
     return null;
   }
 
-  const userId = await validateSessionAndGetUserId(sessionToken);
-  return userId;
+  const user = await validateSessionAndGetUserId(sessionToken);
+  return user;
 });
