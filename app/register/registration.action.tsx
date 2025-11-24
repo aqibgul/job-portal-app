@@ -30,17 +30,20 @@ export const registrationAction = async (data: registerUserData) => {
     const hashedPassword = await argon2.hash(password);
     const hashedConfirmPassword = await argon2.hash(confirmPassword);
 
-    const [result] = await db.insert(users).values({
-      f_name: f_name,
-      userName: userName,
-      email: email,
-      userType: userType,
-      password: hashedPassword,
-      confirmPassword: hashedConfirmPassword,
+    await db.transaction(async (tx) => {
+      const [result] = await tx.insert(users).values({
+        f_name: f_name,
+        userName: userName,
+        email: email,
+        userType: userType,
+        password: hashedPassword,
+        confirmPassword: hashedConfirmPassword,
 
-      phoneNumber: "0000000000",
+        phoneNumber: "0000000000",
+      });
+
+      await createSessionSetCookies(result.insertId, tx);
     });
-    await createSessionSetCookies(result.insertId);
 
     return { status: "success", message: "User registered successfully" };
   } catch (error) {

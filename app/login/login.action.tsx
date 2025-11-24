@@ -6,7 +6,13 @@ import { eq, or } from "drizzle-orm";
 import argon2 from "argon2";
 import { loginSchema, loginUserData } from "@/auth/auth.schema";
 import { create } from "domain";
-import { createSessionSetCookies } from "@/auth/server/use-cases/sessions";
+import {
+  createSessionSetCookies,
+  invalidateSession,
+} from "@/auth/server/use-cases/sessions";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import crypto from "crypto";
 
 export const loginAction = async (data: loginUserData) => {
   // Implement login logic here, e.g., verify user credentials against the database
@@ -25,6 +31,7 @@ export const loginAction = async (data: loginUserData) => {
       return { status: "error", message: "Invalid username or password" };
     }
     const isPasswordValid = await argon2.verify(user.password, password);
+
     await createSessionSetCookies(user.id);
 
     if (!isPasswordValid) {
@@ -35,4 +42,22 @@ export const loginAction = async (data: loginUserData) => {
     console.error("Login error:", error);
     return { status: "error", message: "unknown error occurred" };
   }
+};
+
+//logout
+
+export const logoutAction = async () => {
+  const cookieStore = await cookies();
+  const session = cookieStore.get("session_token")?.value;
+  if (!session) {
+    return redirect("/login");
+  }
+
+  const hashedToken = crypto
+    .createHash("sha-256")
+    .update(session)
+    .digest("hex");
+  await invalidateSession(hashedToken);
+  cookieStore.delete("session_token");
+  return redirect("/login");
 };

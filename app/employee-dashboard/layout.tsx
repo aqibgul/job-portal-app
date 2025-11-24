@@ -1,4 +1,5 @@
 import { getCurrentUser } from "@/auth/server/auth.queries";
+import EmployerSideBar from "@/components/employer-sidebar";
 import { redirect } from "next/navigation";
 
 export default async function EmployeeDashboardLayout({
@@ -11,10 +12,16 @@ export default async function EmployeeDashboardLayout({
     // Handle unauthenticated state, e.g., redirect to login
     return redirect("/login");
   }
+  if (user.userType !== "employee") {
+    // Handle unauthorized access
+    return redirect("/");
+  }
   return (
-    <>
-      <h1>Employee Dashboard Layout {user?.userName}</h1>
-      {children}
-    </>
+    <div className=" flex min-h-screen bg-amber-50">
+      <EmployerSideBar />
+      <main className="container mx-auto bg-amber-200 mt-5 ml-55  md:ml-70 sm:ml-60  mr-5">
+        {children}
+      </main>
+    </div>
   );
 }

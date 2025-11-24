@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, loginUserData } from "@/auth/auth.schema";
+import { useRouter } from "next/navigation";
 
 const Login: React.FC = () => {
   const {
@@ -32,11 +33,14 @@ const Login: React.FC = () => {
   } = useForm({
     resolver: zodResolver(loginSchema),
   });
+  const router = useRouter();
 
   const onSubmit = async (data: loginUserData) => {
     const result = await loginAction(data);
+
     if (result.status === "success") {
       toast.success("Login successful!");
+      router.push("/employee-dashboard");
     } else {
       toast.error(result.message);
     }
