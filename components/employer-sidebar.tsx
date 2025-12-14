@@ -6,13 +6,14 @@ import {
   Building,
   CreditCard,
   LayoutDashboard,
+  LogOutIcon,
   Plus,
   Settings,
   User,
   icons,
 } from "lucide-react";
 import Link from "next/link";
-const base = "/employer-dashboard";
+const base = "/employee-dashboard";
 
 const navigationItems = [
   { name: "Overview", icon: LayoutDashboard, href: base + "/" },
@@ -27,7 +28,7 @@ const navigationItems = [
 
 const EmployerSideBar = () => {
   return (
-    <div className=" sm:w-52 md:w-64   h-screen bg-white shadow-md fixed">
+    <div className=" sm:w-48 md:w-64   h-screen bg-white shadow-md fixed">
       <div>
         <h2 className=" font-medium p-4 border-b border-gray-200">
           Employer Dashboard
@@ -38,7 +39,7 @@ const EmployerSideBar = () => {
           <Link
             key={item.name}
             href={item.href || "#"}
-            className="flex items-center p-4 hover:bg-amber-100 transition-colors"
+            className="flex  items-center p-4 hover:bg-amber-100 transition-colors active:bg-amber-200"
           >
             <item.icon className="mr-3" />
             <span className="capitalize ">{item.name}</span>
@@ -51,6 +52,7 @@ const EmployerSideBar = () => {
           onClick={logoutAction}
           className="m-4 bg-amber-100   py-2 px-4 rounded hover:bg-amber-300 transition-colors"
         >
+          <LogOutIcon className="inline mr-2" />
           Logout
         </button>
       </div>

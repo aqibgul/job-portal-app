@@ -12,4 +12,12 @@ export const getCurrentEmployerDetails = async () => {
     .from(employers)
     .where(eq(employers.id, currentUser.id));
   console.log("Employer Details:", employerDetails);
+
+  const isProfileComplete =
+    employers.name &&
+    employers.description &&
+    employers.avatarUrl &&
+    employers.location &&
+    employers.yearFounded;
+  return { ...currentUser, employerDetails, isProfileComplete };
 };

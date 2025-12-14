@@ -19,7 +19,7 @@ export default async function EmployeeDashboardLayout({
   return (
     <div className=" flex min-h-screen bg-amber-50">
       <EmployerSideBar />
-      <main className="container mx-auto bg-amber-200 mt-5 ml-55  md:ml-70 sm:ml-60  mr-5">
+      <main className="container mx-auto mt-5 ml-55  md:ml-70 sm:ml-60  mr-5">
         {children}
       </main>
     </div>

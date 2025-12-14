@@ -1,7 +1,7 @@
 import { defineConfig } from "drizzle-kit";
 
 export default defineConfig({
-  out: "./drizzle/migrations",
+  out: "./drizzle/migration",
   schema: "./drizzle/schema.ts",
 
   dialect: "mysql",
