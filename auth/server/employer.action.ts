@@ -24,12 +24,14 @@ interface IFormType {
   websiteURL?: string;
   organizationType: OrganizationType;
   teamSize: TeamSizeType;
+  avatarUrl?: string;
+  bannerUrl?: string;
 }
 
 export const updateEmployerProfileAction = async (data: IFormType) => {
   try {
     const currentUser = await getCurrentUser();
-    if (!currentUser || !currentUser.userType == !"employer") {
+    if (!currentUser || currentUser.userType !== "employee") {
       return { status: "error", message: "Unauthorized" };
     }
     const {
@@ -40,6 +42,8 @@ export const updateEmployerProfileAction = async (data: IFormType) => {
       websiteURL,
       organizationType,
       teamSize,
+      avatarUrl,
+      bannerUrl,
     } = data;
 
     const updatedEmployerData = await db
@@ -47,6 +51,8 @@ export const updateEmployerProfileAction = async (data: IFormType) => {
       .set({
         name: companyName,
         description: description,
+        avatarUrl: avatarUrl || "",
+        bannerUrl: bannerUrl || "",
         organizationType: organizationType,
         teamSize: teamSize,
         yearFounded: parseInt(yearOfEstablishment),

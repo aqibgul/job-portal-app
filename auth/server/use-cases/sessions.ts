@@ -87,9 +87,10 @@ export const validateSessionAndGetUserId = async (token: string) => {
       createdAt: users.createdAt,
       updatedAt: users.updatedAt,
     })
-    .from(sessions)
-    .innerJoin(users, eq(users.id, sessions.userId))
-    .where(eq(sessions.id, hashedToken));
+    .from(sessions) // Select from sessions table
+    .where(eq(sessions.id, hashedToken)) // Find session by hashed token
+    .innerJoin(users, eq(users.id, sessions.userId)); // Join with users table to get user info
+
   if (!user) {
     return null;
   }
