@@ -3,45 +3,48 @@ import { db } from "@/config/db";
 import { getCurrentUser } from "./auth.queries";
 import { employers } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
+import { EmployerSettingFormType } from "../employer.schema";
 
-const organizationTypes = [
-  "development",
-  "design",
-  "marketing",
-  "sales",
-  "hr",
-] as const;
-type OrganizationType = (typeof organizationTypes)[number];
+// const organizationTypes = [
+//   "development",
+//   "design",
+//   "marketing",
+//   "sales",
+//   "hr",
+// ] as const;
+// type OrganizationType = (typeof organizationTypes)[number];
 
-const teamSizeTypes = ["20-30", "30-50", "50-100", "100-200", "200+"] as const;
-type TeamSizeType = (typeof teamSizeTypes)[number];
+// const teamSizeTypes = ["20-30", "30-50", "50-100", "100-200", "200+"] as const;
+// type TeamSizeType = (typeof teamSizeTypes)[number];
 
-interface IFormType {
-  companyName: string;
-  description: string;
-  yearOfEstablishment: string;
-  location: string;
-  websiteURL?: string;
-  organizationType: OrganizationType;
-  teamSize: TeamSizeType;
-  avatarUrl?: string;
-  bannerUrl?: string;
-}
+// interface IFormType {
+//   companyName: string;
+//   description: string;
+//   yearOfEstablishment: string;
+//   location: string;
+//   websiteURL?: string;
+//   organizationType: OrganizationType;
+//   teamSize: TeamSizeType;
+//   avatarUrl?: string;
+//   bannerUrl?: string;
+// }
 
-export const updateEmployerProfileAction = async (data: IFormType) => {
+export const updateEmployerProfileAction = async (
+  data: EmployerSettingFormType
+) => {
   try {
     const currentUser = await getCurrentUser();
     if (!currentUser || currentUser.userType !== "employee") {
       return { status: "error", message: "Unauthorized" };
     }
     const {
-      companyName,
+      name,
       description,
-      yearOfEstablishment,
-      location,
-      websiteURL,
       organizationType,
       teamSize,
+      yearFounded,
+      location,
+      websiteUrl,
       avatarUrl,
       bannerUrl,
     } = data;
@@ -49,14 +52,14 @@ export const updateEmployerProfileAction = async (data: IFormType) => {
     const updatedEmployerData = await db
       .update(employers)
       .set({
-        name: companyName,
+        name,
         description: description,
         avatarUrl: avatarUrl || "",
         bannerUrl: bannerUrl || "",
         organizationType: organizationType,
         teamSize: teamSize,
-        yearFounded: parseInt(yearOfEstablishment),
-        websiteUrl: websiteURL || "",
+        yearFounded: parseInt(yearFounded, 10),
+        websiteUrl: websiteUrl || "",
         location: location,
       })
       .where(eq(employers.id, currentUser.id));

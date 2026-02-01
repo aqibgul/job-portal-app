@@ -17,34 +17,61 @@ import {
 
 import { updateEmployerProfileAction } from "@/auth/server/employer.action";
 import { toast } from "sonner";
+import {
+  EmployerSettingFormType,
+  employerSchema,
+  organizationTypes,
+  teamSizes,
+} from "@/auth/employer.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-const organizationTypes = [
-  "development",
-  "design",
-  "marketing",
-  "sales",
-  "hr",
-] as const;
-type OrganizationType = (typeof organizationTypes)[number];
+// const organizationTypes = [
+//   "development",
+//   "design",
+//   "marketing",
+//   "sales",
+//   "hr",
+// ] as const;
+// type OrganizationType = (typeof organizationTypes)[number];
 
-const teamSizeTypes = ["20-30", "30-50", "50-100", "100-200", "200+"] as const;
-type TeamSizeType = (typeof teamSizeTypes)[number];
+// const teamSizeTypes = ["20-30", "30-50", "50-100", "100-200", "200+"] as const;
+// type TeamSizeType = (typeof teamSizeTypes)[number];
 
-interface IFormType {
-  username: string;
-  email: string;
-  companyName: string;
-  description: string;
-  yearOfEstablishment: string;
-  location: string;
-  websiteURL?: string;
-  organizationType: OrganizationType;
-  teamSize: TeamSizeType;
-}
+// interface IFormType {
+//   username: string;
+//   email: string;
+//   companyName: string;
+//   description: string;
+//   yearOfEstablishment: string;
+//   location: string;
+//   websiteURL?: string;
+//   organizationType: OrganizationType;
+//   teamSize: TeamSizeType;
+// }
 
-const EmployerSetting = () => {
-  const { register, handleSubmit, control } = useForm<IFormType>();
-  const handleFormSubmit = async (data: IFormType) => {
+const EmployerSetting = ({
+  initialData,
+}: {
+  initialData?: Partial<EmployerSettingFormType>;
+}) => {
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<EmployerSettingFormType>({
+    resolver: zodResolver(employerSchema),
+    defaultValues: {
+      name: initialData?.name || "",
+      description: initialData?.description || "",
+      organizationType: initialData?.organizationType || undefined,
+      teamSize: initialData?.teamSize || undefined,
+      yearFounded: initialData?.yearFounded || "",
+      location: initialData?.location || "",
+      websiteUrl: initialData?.websiteUrl || "",
+    },
+  });
+  const handleFormSubmit = async (data: EmployerSettingFormType) => {
     console.log("updated data", data);
     const response = await updateEmployerProfileAction(data);
     if (response.status === "success") {
@@ -97,11 +124,14 @@ const EmployerSetting = () => {
               <Input
                 type="text"
                 id="companyName"
-                {...register("companyName")}
+                {...register("name")}
                 placeholder="Enter Company Name"
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
               />
             </div>
+            {errors.name && (
+              <p className="text-red-500 text-sm">{errors.name.message}</p>
+            )}
             {/* Description */}
             <div>
               <Label
@@ -117,6 +147,11 @@ const EmployerSetting = () => {
                 className="h-40 mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
               />
             </div>
+            {errors.description && (
+              <p className="text-red-500 text-sm ">
+                {errors.description.message}
+              </p>
+            )}
 
             {/* organization details  */}
             <div className="sm:flex mt-9 w-full">
@@ -147,6 +182,11 @@ const EmployerSetting = () => {
                     </div>
                   )}
                 />
+                {errors.organizationType && (
+                  <p className="text-red-500 text-sm ">
+                    {errors.organizationType.message}
+                  </p>
+                )}
               </div>
 
               {/* Team size */}
@@ -166,7 +206,7 @@ const EmployerSetting = () => {
                         <SelectTrigger className=" w-full sm:w-1/2 ">
                           <SelectValue placeholder="Select Team Size *" />
                           <SelectContent>
-                            {teamSizeTypes.map((type) => (
+                            {teamSizes.map((type) => (
                               <SelectItem key={type} value={type}>
                                 {type}
                               </SelectItem>
@@ -177,6 +217,11 @@ const EmployerSetting = () => {
                     </div>
                   )}
                 />
+                {errors.teamSize && (
+                  <p className="text-red-500 text-sm ">
+                    {errors.teamSize.message}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -188,11 +233,17 @@ const EmployerSetting = () => {
                 <Input
                   type="text"
                   id="yearOfEstablishment"
-                  {...register("yearOfEstablishment")}
+                  {...register("yearFounded")}
                   placeholder="Enter Year of Establishment"
                   className="mt-1 block  border border-gray-300 rounded-md shadow-sm p-2"
                 />
+                {errors.yearFounded && (
+                  <p className="text-red-500 text-sm ">
+                    {errors.yearFounded.message}
+                  </p>
+                )}
               </div>
+
               <div className="sm:w-1/2 sm:ml-3.5">
                 <Label htmlFor="location">location *</Label>
                 <Input
@@ -202,6 +253,11 @@ const EmployerSetting = () => {
                   placeholder="Enter location"
                   className="mt-1 block  border border-gray-300 rounded-md shadow-sm p-2"
                 />
+                {errors.location && (
+                  <p className="text-red-500 text-sm ">
+                    {errors.location.message}
+                  </p>
+                )}
               </div>
             </div>
             <div>
@@ -214,7 +270,7 @@ const EmployerSetting = () => {
               <Input
                 type="text"
                 id="websiteURL"
-                {...register("websiteURL")}
+                {...register("websiteUrl")}
                 placeholder="Enter Website URL"
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
               />
