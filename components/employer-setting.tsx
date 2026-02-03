@@ -24,6 +24,7 @@ import {
   teamSizes,
 } from "@/auth/employer.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { is } from "drizzle-orm";
 
 // const organizationTypes = [
 //   "development",
@@ -58,7 +59,7 @@ const EmployerSetting = ({
     register,
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isDirty, isSubmitting },
   } = useForm<EmployerSettingFormType>({
     resolver: zodResolver(employerSchema),
     defaultValues: {
@@ -275,12 +276,15 @@ const EmployerSetting = ({
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
               />
             </div>
-
-            <Button type="submit">Update Settings</Button>
-            <Button variant="outline" type="submit">
-              {" "}
-              Save Changes
-            </Button>
+            <div className="flex">
+              <Button type="submit">
+                {isSubmitting && (
+                  <span className="mr-2 animate-spin">&#9696;</span>
+                )}
+                {isSubmitting ? "Saving..." : " Save Changes"}
+              </Button>
+              {!isDirty && <p className="pt-1.5 pl-1.5">No changes to save </p>}
+            </div>
           </form>
         </CardContent>
       </Card>
