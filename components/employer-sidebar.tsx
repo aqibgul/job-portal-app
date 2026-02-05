@@ -1,4 +1,6 @@
+"use client";
 import { logoutAction } from "@/app/login/login.action";
+import { cn } from "@/lib/utils";
 import {
   Book,
   Bookmark,
@@ -13,6 +15,9 @@ import {
   icons,
 } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { URLPattern } from "next/server";
+import { use } from "react";
 const base = "/employee-dashboard";
 
 const navigationItems = [
@@ -27,6 +32,22 @@ const navigationItems = [
 ];
 
 const EmployerSideBar = () => {
+  const pathname = usePathname();
+  const isActiveLink = ({
+    href,
+    pathname,
+    base,
+  }: {
+    href: string;
+    pathname: string;
+    base: string;
+  }) => {
+    const normalizedHref = href.replace(/\/+$/, "") || "/"; // Remove trailing slashes
+    const pattern = new URLPattern({
+      pathname: normalizedHref === base ? base : `${normalizedHref}{/*}?`,
+    });
+    return pattern.test({ pathname });
+  };
   return (
     <div className=" sm:w-48 md:w-64   h-screen bg-white shadow-md fixed">
       <div>
@@ -39,7 +60,14 @@ const EmployerSideBar = () => {
           <Link
             key={item.name}
             href={item.href || "#"}
-            className="flex  items-center p-4 hover:bg-amber-100 transition-colors active:bg-amber-200"
+            className={cn(
+              "flex items-center p-4 hover:bg-gray-100 transition-colors",
+              isActiveLink({
+                href: item.href || "#",
+                pathname,
+                base,
+              }) && "bg-gray-300 font-medium"
+            )}
           >
             <item.icon className="mr-3" />
             <span className="capitalize ">{item.name}</span>
