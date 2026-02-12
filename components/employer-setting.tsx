@@ -25,6 +25,7 @@ import {
 } from "@/auth/employer.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { is } from "drizzle-orm";
+import Tiptap from "./texteditor";
 
 // const organizationTypes = [
 //   "development",
@@ -153,6 +154,10 @@ const EmployerSetting = ({
                 {errors.description.message}
               </p>
             )}
+
+            <div>
+              <Tiptap />
+            </div>
 
             {/* organization details  */}
             <div className="sm:flex mt-9 w-full">

@@ -36,16 +36,20 @@ const EmployerSideBar = () => {
   const isActiveLink = ({
     href,
     pathname,
-    base,
+    base = "/",
   }: {
     href: string;
     pathname: string;
-    base: string;
+    base?: string;
   }) => {
     const normalizedHref = href.replace(/\/+$/, "") || "/"; // Remove trailing slashes
+    // URL pattern is build-in browser API to match URL patterns
+    // properties: pathname, search, hash, username, password, port, hostname, protocol
+
     const pattern = new URLPattern({
       pathname: normalizedHref === base ? base : `${normalizedHref}{/*}?`,
     });
+    // console.log("Matching pattern:", pattern, "with pathname:", pathname);
     return pattern.test({ pathname });
   };
   return (
@@ -66,7 +70,7 @@ const EmployerSideBar = () => {
                 href: item.href || "#",
                 pathname,
                 base,
-              }) && "bg-gray-300 font-medium"
+              }) && "bg-blue-300 font-medium"
             )}
           >
             <item.icon className="mr-3" />
