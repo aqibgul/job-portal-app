@@ -135,28 +135,28 @@ const EmployerSetting = ({
               <p className="text-red-500 text-sm">{errors.name.message}</p>
             )}
             {/* Description */}
-            <div>
-              <Label
-                htmlFor="description"
-                className="block text-sm font-medium "
-              >
-                Description *
-              </Label>
-              <Textarea
-                id="description"
-                {...register("description")}
-                placeholder="Enter Description"
-                className="h-40 mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-              />
-            </div>
-            {errors.description && (
-              <p className="text-red-500 text-sm ">
-                {errors.description.message}
-              </p>
-            )}
 
             <div>
-              <Tiptap />
+              <Controller
+                name="description"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <div>
+                    <Label
+                      htmlFor="description"
+                      className="block text-sm font-medium "
+                    >
+                      Description *
+                    </Label>
+                    <Tiptap content={field.value} onChange={field.onChange} />
+                    {fieldState.error && (
+                      <p className="text-red-500 text-sm ">
+                        {fieldState.error.message}
+                      </p>
+                    )}
+                  </div>
+                )}
+              />
             </div>
 
             {/* organization details  */}
